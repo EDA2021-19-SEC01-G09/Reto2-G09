@@ -39,8 +39,21 @@ los mismos.
 
 # Construccion de modelos
 
+def newCatalog():
+    catalog = {'videos': None,
+               'categorias': None}
+
+    catalog['videos'] = lt.newList('SINGLE_LINKED')
+    catalog['categorias'] = mp.newMap(10000,
+                                   maptype='CHAINING',
+                                   loadfactor=1.5)
+
 # Funciones para agregar informacion al catalogo
 
+def addVideo(catalogo, vid):
+    lt.addLast(catalog['videos'], vid)
+    mp.put(catalog['categorias'], vid['category_id'], vid)
+    
 # Funciones para creacion de datos
 
 # Funciones de consulta
