@@ -47,11 +47,12 @@ def newCatalog():
     todos los videos, adicionalmente, crea una lista vacia para las categorías
     """
     catalog = {'videos': None,
-            'categorias': None}
+            'categorias': None,
+              'categoriasId': None}
 
     catalog['videos'] = lt.newList("ARRAY_LIST")
-    catalog['cat_name_id'] = lt.newList("ARRAY_LIST", cmpfunction=compararCategorias)
-    catalog['categorias'] = mp.newMap(32, maptype='CHAINING', comparefunction=cmpCategorias)
+    catalog['categorias'] = lt.newList("ARRAY_LIST", cmpfunction=compararCategorias)
+    catalog['categoriasId'] = mp.newMap(32, maptype='CHAINING', comparefunction=cmpCategorias)
     
     return catalog
 
@@ -63,21 +64,27 @@ def newCategoria(id):
     y su promedio de ratings. Se crea una lista para guardar los
     libros de dicho autor.
     """
-    author = {'id': "",
+    cat = {'id': "",
               "videos": None}
-    author['name'] = id
-    author['videos'] = lt.newList('ARRAY_LIST', cmpCategorias)
-    return author
+    cat['name'] = id
+    cat['videos'] = lt.newList('ARRAY_LIST', cmpCategorias)
+    return cat
 
 # Funciones para agregar informacion al catalogo
 
 def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
     lt.addLast(catalog['videos'], video)
-    addCategoria(catalog, video['category_id'], video)
+    addCategoriaId(catalog, video['category_id'], video)
+    
+def addCategoria(catalog, categoria):
+    """
+    Adiciona una categoría a la lista de categorías
+    """
+    lt.addLast(catalog['categorias'], categoria)
 
-def addCategoria(catalog, idCategoria, video):
-    categorias =  catalog['categorias']
+def addCategoriaId(catalog, idCategoria, video):
+    categorias =  catalog['categoriasId']
     existcategoria = mp.contains(categorias, idCategoria)
     if existcategoria:
         entry = mp.get(categorias, idCategoria)
@@ -91,18 +98,27 @@ def addCategoria(catalog, idCategoria, video):
 # Funciones de consulta
 """
 def filtrarRequerimiento1(catalog, categoria):
-    if mp.contains(catalog['categorias'], categoria):
-        lista = mp.get(catalog['categorias'], categoria)
+    if mp.contains(catalog['categoriasId'], categoria):
+        lista = mp.get(catalog['categoriasId'], categoria)
         return lista
     else:
         return None
 """
 def getVideosByCat(catalog, categoria):
 
-    cat = mp.get(catalog['categorias'], categoria)
+    cat = mp.get(catalog['categoriasId'], categoria)
     if cat:
         return me.getValue(cat)
     return None
+   
+def buscarCategoria(catalog, categoria):
+    """
+    Retorna un autor con sus libros a partir del nombre del autor
+    """
+    if lt.isPresent(catalog['categorias'], categoria) > 0:
+        return True
+    else:
+        return False
 
 # Funciones utilizadas para comparar elementos
 
@@ -128,6 +144,11 @@ def cmpVideosByViews(video1, video2):
     """
     if (int(video1['views']) > int(video2['views'])):
         return True
+
+def compararCategorias(categoria1, categoria):
+    if categoria1.lower() in categoria['name'].lower():
+        return 0
+    return -1
 
 # Funciones de ordenamiento
 
