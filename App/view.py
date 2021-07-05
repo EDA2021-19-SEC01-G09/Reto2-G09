@@ -47,9 +47,21 @@ def initCatalog():
 
 def loadData(catalog):
     """
-    Carga los videos en el catalogo
+    Carga los videos en la estructura de datos
     """
     controller.loadData(catalog)
+
+def printResultsReq1(ord_videos, n_videos):
+    size = lt.size(ord_videos)
+    if size >= n_videos:
+        print("Los ", n_videos, " videos con más likes son: ")
+        i = 1
+        while i <= (n_videos):
+            video = lt.getElement(ord_videos, i)
+            print('Trending date: ' + video['trending_date'] + ' Título: ' +
+            video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Fecha publicación: ' + video['publish_time'] + ' Vistas: ' + video['views'] + ' Likes: ' + video['likes'] + ' Dislikes: ' + video['dislikes'])
+            i += 1
+    return ""
 
 catalog = None
 
@@ -63,12 +75,20 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         loadData(catalog)
+        print('Videos cargados: ' + str(lt.size(catalog['videos'])))
 
 
     elif int(inputs[0]) == 2:
         category_name = input('Ingrese la categoría deseada: ')
-        print("")
-        pass
+        listaFiltrada = controller.filtrarRequerimiento1(catalog, category_name)['videos']
+        n_videos = int(input('Ingrese el número de videos que quiere listar: '))
+        if n_videos > lt.size(listaFiltrada):
+            print('La sublista deseada excede el número de videos que tienen esa categoría. Por favor ingresar otro valor.')
+        else:
+            result = controller.sortViews(listaFiltrada, n_videos)
+            print('Cargando información de videos con más likes...')
+            print(printResultsReq1(result, n_videos))
+
 
     else:
         sys.exit(0)
