@@ -25,6 +25,10 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+import sys
+
+default_limit = 1000
+sys.setrecursionlimit(default_limit*10)
 
 
 """
@@ -50,6 +54,12 @@ def loadData(catalog):
     Carga los videos en la estructura de datos
     """
     controller.loadData(catalog)
+
+def obtenerIdCategoria(catalog, category_name):
+    for i in range(0, lt.size(catalog['categorias'])):
+        categoriaDada = lt.getElement(catalog['categorias'], i)
+        if category_name == categoriaDada['name']:
+            return categoriaDada['id']
 
 def printResultsReq1(ord_videos, n_videos):
     size = lt.size(ord_videos)
@@ -80,14 +90,19 @@ while True:
 
     elif int(inputs[0]) == 2:
         category_name = input('Ingrese la categoría deseada: ')
-        listaFiltrada = controller.filtrarRequerimiento1(catalog, category_name)['videos']
-        n_videos = int(input('Ingrese el número de videos que quiere listar: '))
-        if n_videos > lt.size(listaFiltrada):
-            print('La sublista deseada excede el número de videos que tienen esa categoría. Por favor ingresar otro valor.')
-        else:
-            result = controller.sortViews(listaFiltrada, n_videos)
-            print('Cargando información de videos con más likes...')
-            print(printResultsReq1(result, n_videos))
+        if controller.buscarCategoria(catalog, category_name) == True:
+            id = obtenerIdCategoria(catalog, category_name)
+            listaFiltrada = controller.filtrarRequerimiento1(catalog, id)['videos']
+            print("Se cargaron ", lt.size(listaFiltrada['videos']))
+            n_videos = int(input('Ingrese el número de videos que quiere listar: '))
+            
+            if n_videos > lt.size(listaFiltrada):
+                print('La sublista deseada excede el número de videos que tienen esa categoría. Por favor ingresar otro valor.')
+              
+            else:
+                result = controller.sortViews(listaFiltrada, n_videos)
+                print('Cargando información de videos con más likes...')
+                print(printResultsReq1(result, n_videos))
 
 
     else:
