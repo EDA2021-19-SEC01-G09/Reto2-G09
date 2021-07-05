@@ -51,8 +51,8 @@ def newCatalog():
               'categoriasId': None}
 
     catalog['videos'] = lt.newList("ARRAY_LIST")
-    catalog['categorias'] = lt.newList("ARRAY_LIST", cmpfunction=compararCategorias)
-    catalog['categoriasId'] = mp.newMap(32, maptype='CHAINING', comparefunction=cmpCategorias)
+    catalog['categorias'] = lt.newList("ARRAY_LIST", cmpfunction = compararCategorias)
+    catalog['categoriasId'] = mp.newMap(67, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
     
     return catalog
 
@@ -96,14 +96,7 @@ def addCategoriaId(catalog, idCategoria, video):
     
 
 # Funciones de consulta
-"""
-def filtrarRequerimiento1(catalog, categoria):
-    if mp.contains(catalog['categoriasId'], categoria):
-        lista = mp.get(catalog['categoriasId'], categoria)
-        return lista
-    else:
-        return None
-"""
+
 def getVideosByCat(catalog, categoria):
 
     cat = mp.get(catalog['categoriasId'], categoria)
@@ -158,3 +151,5 @@ def sortViews(catalog, size):
     sorted_list = ms.sort(sub_list, cmpVideosByViews)    
     sub_list2 = lt.subList(sorted_list, 1, size)
     return sub_list2
+
+#

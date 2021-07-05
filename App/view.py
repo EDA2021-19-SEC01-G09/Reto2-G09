@@ -93,7 +93,7 @@ while True:
         if controller.buscarCategoria(catalog, category_name) == True:
             id = obtenerIdCategoria(catalog, category_name)
             listaFiltrada = controller.filtrarRequerimiento1(catalog, id)['videos']
-            print("Se cargaron ", lt.size(listaFiltrada['videos']))
+            print("Se cargaron ", lt.size(listaFiltrada))
             n_videos = int(input('Ingrese el número de videos que quiere listar: '))
             
             if n_videos > lt.size(listaFiltrada):
@@ -108,3 +108,5 @@ while True:
     else:
         sys.exit(0)
 sys.exit(0)
+
+#
