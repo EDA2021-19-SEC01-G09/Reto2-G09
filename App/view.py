@@ -53,7 +53,7 @@ def loadData(catalog):
     """
     Carga los videos en la estructura de datos
     """
-    controller.loadData(catalog)
+    return controller.loadData(catalog)
 
 def obtenerIdCategoria(catalog, category_name):
     for i in range(0, lt.size(catalog['categorias'])):
@@ -84,8 +84,10 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
-        loadData(catalog)
+        answer = loadData(catalog)
         print('Videos cargados: ' + str(lt.size(catalog['videos'])))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
 
     elif int(inputs[0]) == 2:
