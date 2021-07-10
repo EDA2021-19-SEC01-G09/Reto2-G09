@@ -52,7 +52,7 @@ def newCatalog():
 
     catalog['videos'] = lt.newList("ARRAY_LIST")
     catalog['categorias'] = lt.newList("ARRAY_LIST", cmpfunction = compararCategorias)
-    catalog['categoriasId'] = mp.newMap(67, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
+    catalog['categoriasId'] = mp.newMap(32, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
     
     return catalog
 
@@ -132,8 +132,8 @@ def cmpVideosByViews(video1, video2):
     """
     Devuelve verdadero (True) si los likes de video1 son menores que los del video2
     Args:
-        video1: informacion del primer video que incluye su valor 'likes'
-        video2: informacion del segundo video que incluye su valor 'likes'
+        video1: informacion del primer video que incluye su valor 'views'
+        video2: informacion del segundo video que incluye su valor 'views'
     """
     if (int(video1['views']) > int(video2['views'])):
         return True
