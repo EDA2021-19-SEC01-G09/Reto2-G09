@@ -90,8 +90,8 @@ def filtrarRequerimiento1(catalog, categoria):
 
 # Funciones de ordenamiento
 
-def sortViews(catalog, n_videos):
-    return model.sortViews(catalog, n_videos)
+def sortLikes(catalog, n_videos):
+    return model.sortLikes(catalog, n_videos)
 
 # Funciones de consulta sobre el catálogo
  

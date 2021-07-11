@@ -102,7 +102,7 @@ while True:
                 print('La sublista deseada excede el número de videos que tienen esa categoría. Por favor ingresar otro valor.')
               
             else:
-                result = controller.sortViews(listaFiltrada, n_videos)
+                result = controller.sortLikes(listaFiltrada, n_videos)
                 print('Cargando información de videos con más likes...')
                 print(printResultsReq1(result, n_videos))
 

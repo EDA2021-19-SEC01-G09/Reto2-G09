@@ -128,14 +128,14 @@ def cmpCategorias(keyname, categoria):
     else:
         return -1
 
-def cmpVideosByViews(video1, video2):
+def cmpVideosByLikes(video1, video2):
     """
     Devuelve verdadero (True) si los likes de video1 son menores que los del video2
     Args:
-        video1: informacion del primer video que incluye su valor 'views'
-        video2: informacion del segundo video que incluye su valor 'views'
+        video1: informacion del primer video que incluye su valor 'likes'
+        video2: informacion del segundo video que incluye su valor 'likes'
     """
-    if (int(video1['views']) > int(video2['views'])):
+    if (int(video1['likes']) > int(video2['likes'])):
         return True
 
 def compararCategorias(categoria1, categoria):
@@ -145,10 +145,10 @@ def compararCategorias(categoria1, categoria):
 
 # Funciones de ordenamiento
 
-def sortViews(catalog, size):
+def sortLikes(catalog, size):
     sub_list = lt.subList(catalog, 1, lt.size(catalog))
     sub_list = sub_list.copy()
-    sorted_list = ms.sort(sub_list, cmpVideosByViews)    
+    sorted_list = ms.sort(sub_list, cmpVideosByLikes)    
     sub_list2 = lt.subList(sorted_list, 1, size)
     return sub_list2
 
