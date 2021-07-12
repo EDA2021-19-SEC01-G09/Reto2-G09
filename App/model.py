@@ -161,12 +161,11 @@ def filtrarRequerimiento3(catalog, categoria):
                 elif mp.contains(revisar, elementos['video_id']) == True:
                     vidRatio = mp.get(revisar, elementos['video_id'])
                     prevRatio = me.getValue(vidRatio)
-                    mp.remove(revisar, elementos['video_id'])
-                    mp.put(revisar, elementos['video_id'], prevRatio + 1)
+                    me.setValue(vidRatio, prevRatio + 1)
                     newVidRatio = mp.get(revisar, elementos['video_id'])
                     elementos['dias'] = me.getValue(newVidRatio)
                     lt.addLast(listaFiltrada, elementos)
-    print(revisar)
+    #print(revisar)
     return listaFiltrada
    
 def buscarCategoria(catalog, categoria):
