@@ -140,11 +140,11 @@ def filtrarRequerimiento3(catalog, categoria):
             ratio = int(elementos['likes']) / dislikes
             if ratio > 20:
                 elementos['ratio_likes_dislikes'] = round(ratio, 2)
-                if elementos['category_id'] == categoria and elementos['video_id'] != '#NAME?' and not(elementos['video_id'] in revisar.keys()):
+                if elementos['video_id'] != '#NAME?' and (mp.contains(revisar, elementos['video_id']) == False):
                     mp.put(revisar, elementos['video_id'], 1)
                     elementos['dias'] = 1
                     lt.addLast(listaFiltrada, elementos)
-                elif elementos['category_id'] == categoria and (elementos['video_id'] in revisar.keys()):
+                elif mp.contains(revisar, elementos['video_id']) == True:
                     vidRatio = mp.get(revisar, elementos['video_id'])
                     prevRatio = me.getValue(vidRatio)
                     mp.remove(revisar, elementos['video_id'])
