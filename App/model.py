@@ -48,11 +48,13 @@ def newCatalog():
     """
     catalog = {'videos': None,
             'categorias': None,
-              'categoriasId': None}
+              'categoriasId': None,
+              'paises': None}
 
     catalog['videos'] = lt.newList("ARRAY_LIST")
     catalog['categorias'] = lt.newList("ARRAY_LIST", cmpfunction = compararCategorias)
     catalog['categoriasId'] = mp.newMap(32, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
+    catalog['paises'] = mp.newMap(10, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpPaises)
     
     return catalog
 
@@ -74,7 +76,7 @@ def newPais(nombre):
     pais = {'pais' : "",
             'videos' : None}
     pais['pais'] = nombre
-    pais['videos'] = lt.newList("ARRAY_LIST")
+    pais['videos'] = lt.newList("ARRAY_LIST", cmpPaises)
     return pais
 
 
@@ -84,6 +86,7 @@ def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
     lt.addLast(catalog['videos'], video)
     addCategoriaId(catalog, video['category_id'], video['country'], video)
+    addPais(catalog, video['country'], video)
     
 def addCategoria(catalog, categoria):
     """
@@ -108,6 +111,17 @@ def addCategoriaId(catalog, idCategoria, country, video):
     else:
         pais = newPais(country)
         mp.put(paises, country, pais)
+    lt.addLast(pais['videos'], video)
+    
+def addPais(catalog, paisName, video):
+    paises =  catalog['paises']
+    existpais = mp.contains(paises, paisName)
+    if existpais:
+        entry = mp.get(paises, paisName)
+        pais = me.getValue(entry)
+    else:
+        pais = newPais(paisName)
+        mp.put(paises, paisName, pais)
     lt.addLast(pais['videos'], video)
     
 # Funciones de consulta
@@ -166,6 +180,19 @@ def buscarCategoria(catalog, categoria):
 
 
 # Funciones utilizadas para comparar elementos
+
+def cmpPaises(keyname, pais):
+    """
+    Compara dos nombres de autor. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    authentry = me.getKey(pais)
+    if (keyname == authentry):
+        return 0
+    elif (keyname > authentry):
+        return 1
+    else:
+        return -1
 
 def cmpCategorias(keyname, categoria):
     """
