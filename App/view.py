@@ -41,7 +41,10 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- Cargar videos con más views en función de la categoría")
+    print("2- Cargar videos con más likes en función de la categoría y el país")
+    print("3- Cargar video con percepción altamente positiva que más días ha sido trend por país")
+    print("4- Cargar video con percepción altamente positiva que más días ha sido trend por categoría")
+    print("5- Cargar videos con más comentarios en función del país y un tag")
 
 def initCatalog():
     """
@@ -73,6 +76,11 @@ def printResultsReq1(ord_videos, n_videos):
             i += 1
     return ""
 
+def printResultsReq3(ord_videos):
+    video = lt.getElement(ord_videos, 1)
+    print('Categoría: ' + video['category_id'] + ' Título: ' + video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Relación likes/dislikes: ' + str(video['ratio_likes_dislikes']) + ' Días: ' + str(video['dias']))      
+    return ""
+
 catalog = None
 
 """
@@ -94,7 +102,8 @@ while True:
         category_name = input('Ingrese la categoría deseada: ')
         if controller.buscarCategoria(catalog, category_name) == True:
             id = obtenerIdCategoria(catalog, category_name)
-            listaFiltrada = controller.filtrarRequerimiento1(catalog, id)['videos']
+            country = input('Ingrese el país que desea consultar: ')
+            listaFiltrada = controller.filtrarRequerimiento1(catalog, id, country)['videos']
             print("Se cargaron ", lt.size(listaFiltrada))
             n_videos = int(input('Ingrese el número de videos que quiere listar: '))
             
@@ -107,6 +116,17 @@ while True:
                 print(printResultsReq1(result, n_videos))
 
 
+    elif int(inputs[0]) == 4:
+        category_name = input('Ingrese la categoría deseada: ')
+        if controller.buscarCategoria(catalog, category_name) == True:
+            id = obtenerIdCategoria(catalog, category_name) 
+            listaFiltrada = controller.filtrarRequerimiento3(catalog, id) 
+            print("Se cargaron ", lt.size(listaFiltrada))
+            result = controller.sortDias(listaFiltrada) 
+            print(printResultsReq3(result)) 
+        else:
+            print('La categoría ingresada no existe.')
+    
     else:
         sys.exit(0)
 sys.exit(0)

@@ -85,19 +85,26 @@ def loadCategorias(catalog):
         c_categoria = {k:v.strip() for k, v in categoria.items()}
         model.addCategoria(catalog, c_categoria)
        
-def filtrarRequerimiento1(catalog, categoria):
-    return model.getVideosByCat(catalog, categoria)
+def filtrarRequerimiento1(catalog, categoria, country):
+    return model.getVideosByCat(catalog, categoria, country)
+
+def filtrarRequerimiento3(catalog, categoria):
+    return model.filtrarRequerimiento3(catalog, categoria)
 
 # Funciones de ordenamiento
 
 def sortLikes(catalog, n_videos):
     return model.sortLikes(catalog, n_videos)
 
+def sortDias(catalog):
+    return model.sortDias(catalog)
+
 # Funciones de consulta sobre el catálogo
  
 def buscarCategoria(catalog, categoria):
     cat = model.buscarCategoria(catalog, categoria)
     return cat
+
 
 # ======================================
 # Funciones para medir tiempo y memoria
