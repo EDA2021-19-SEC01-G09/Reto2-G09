@@ -134,6 +134,33 @@ def filtrarRequerimiento1(catalog, categoria, country):
         if pais:    
             return me.getValue(pais)
     return None
+   
+def filtrarRequerimiento2(catalog, pais):
+    listaFiltrada = lt.newList('ARRAY_LIST')
+    revisar = mp.newMap(2, maptype = 'PROBING', loadfactor = 0.5)
+    lista = mp.get(catalog['paises'], pais)
+    paisVideos = me.getValue(lista)['videos']
+    for i in range(0, lt.size(paisVideos)):
+        elementos = lt.getElement(paisVideos, i)
+        dislikes = int(elementos['dislikes'])
+        if dislikes == 0:
+            dislikes = 1
+        ratio = int(elementos['likes']) / dislikes
+        if ratio > 10:
+            elementos['ratio_likes_dislikes'] = round(ratio, 2)
+            if elementos['video_id'] != '#NAME?' and not mp.contains(revisar, elementos['video_id']):
+                mp.put(revisar, elementos['video_id'], 1)
+                elementos['dias'] = 1
+                lt.addLast(listaFiltrada, elementos)
+            elif mp.contains(revisar, elementos['video_id']):
+                vidRatio = mp.get(revisar, elementos['video_id'])
+                prevRatio = me.getValue(vidRatio)
+                mp.remove(revisar, elementos['video_id'])
+                mp.put(revisar, elementos['video_id'], prevRatio + 1)
+                elementos['dias'] = prevRatio + 1
+                lt.addLast(listaFiltrada, elementos)
+
+    return listaFiltrada
 
 def filtrarRequerimiento3(catalog, categoria):
     listaFiltrada = lt.newList('ARRAY_LIST')
@@ -171,6 +198,12 @@ def buscarCategoria(catalog, categoria):
     Retorna un autor con sus libros a partir del nombre del autor
     """
     if lt.isPresent(catalog['categorias'], categoria) > 0:
+        return True
+    else:
+        return False
+     
+def buscarPais(catalog, pais):
+    if mp.contains(catalog, pais) == True:
         return True
     else:
         return False
