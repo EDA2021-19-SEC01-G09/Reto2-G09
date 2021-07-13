@@ -41,7 +41,6 @@ los mismos.
 # Construccion de modelos
 
 def newCatalog():
-
     """
     Inicializa el catálogo de videos. Crea una lista vacia para guardar
     todos los videos, adicionalmente, crea una lista vacia para las categorías

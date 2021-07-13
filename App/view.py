@@ -27,6 +27,7 @@ from DISClib.ADT import list as lt
 assert cf
 import sys
 
+
 default_limit = 1000
 sys.setrecursionlimit(default_limit*10)
 
@@ -46,11 +47,13 @@ def printMenu():
     print("4- Cargar video con percepción altamente positiva que más días ha sido trend por categoría")
     print("5- Cargar videos con más comentarios en función del país y un tag")
 
+
 def initCatalog():
     """
     Inicializa el catalogo de videos
     """
     return controller.initCatalog()
+
 
 def loadData(catalog):
     """
@@ -58,11 +61,13 @@ def loadData(catalog):
     """
     return controller.loadData(catalog)
 
+
 def obtenerIdCategoria(catalog, category_name):
     for i in range(0, lt.size(catalog['categorias'])):
         categoriaDada = lt.getElement(catalog['categorias'], i)
         if category_name == categoriaDada['name']:
             return categoriaDada['id']
+
 
 def printResultsReq1(ord_videos, n_videos):
     size = lt.size(ord_videos)
@@ -75,72 +80,93 @@ def printResultsReq1(ord_videos, n_videos):
             video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Fecha publicación: ' + video['publish_time'] + ' Vistas: ' + video['views'] + ' Likes: ' + video['likes'] + ' Dislikes: ' + video['dislikes'])
             i += 1
     return ""
-   
+
+
 def printResultsReq2(ord_videos):
     video = lt.getElement(ord_videos, 1)
     print('País: ' + video['country'] + ' Título: ' + video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Relación likes/dislikes: ' + str(video['ratio_likes_dislikes']) + ' Días: ' + str(video['dias']))      
     return ""
+
 
 def printResultsReq3(ord_videos):
     video = lt.getElement(ord_videos, 1)
     print('Categoría: ' + video['category_id'] + ' Título: ' + video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Relación likes/dislikes: ' + str(video['ratio_likes_dislikes']) + ' Días: ' + str(video['dias']))      
     return ""
 
+
 catalog = None
+
 
 """
 Menu principal
 """
+
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
         answer = loadData(catalog)
         print('Videos cargados: ' + str(lt.size(catalog['videos'])))
+        print('Categrías cargadas: ' + str(lt.size(catalog['categorias'])))
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")
 
 
     elif int(inputs[0]) == 2:
         category_name = input('Ingrese la categoría deseada: ')
+
         if controller.buscarCategoria(catalog, category_name) == True:
             id = obtenerIdCategoria(catalog, category_name)
             country = input('Ingrese el país que desea consultar: ')
-            listaFiltrada = controller.filtrarRequerimiento1(catalog, id, country)['videos']
-            print("Se cargaron ", lt.size(listaFiltrada))
-            n_videos = int(input('Ingrese el número de videos que quiere listar: '))
-            
-            if n_videos > lt.size(listaFiltrada):
-                print('La sublista deseada excede el número de videos que tienen esa categoría. Por favor ingresar otro valor.')
-              
+
+            if controller.buscarPais(catalog['paises'], country) == True: 
+                listaFiltrada = controller.filtrarRequerimiento1(catalog, id, country)['videos']
+                print("Se cargaron ", lt.size(listaFiltrada))
+                n_videos = int(input('Ingrese el número de videos que quiere listar: '))
+
+                if n_videos > lt.size(listaFiltrada):
+                    print('La sublista deseada excede el número de videos que tienen esa categoría. Por favor ingresar otro valor.')
+
+                else:
+                    result = controller.sortLikes(listaFiltrada, n_videos)
+                    print('Cargando información de videos con más likes...')
+                    print(printResultsReq1(result, n_videos))
+
             else:
-                result = controller.sortLikes(listaFiltrada, n_videos)
-                print('Cargando información de videos con más likes...')
-                print(printResultsReq1(result, n_videos))
+                print('El país ingresado no existe.')
                 
+
     elif int(inputs[0]) == 3:
         country = input('Ingrese el pais deseado: ')
+
         if controller.buscarPais(catalog['paises'], country) == True: 
             listaFiltrada = controller.filtrarRequerimiento2(catalog, country)
             print("Se cargaron ", lt.size(listaFiltrada))
             result = controller.sortDias(listaFiltrada)
             print(printResultsReq2(result)) 
+
         else:
             print('El país ingresado no existe.')
 
+
     elif int(inputs[0]) == 4:
         category_name = input('Ingrese la categoría deseada: ')
+
         if controller.buscarCategoria(catalog, category_name) == True:
             id = obtenerIdCategoria(catalog, category_name) 
             listaFiltrada = controller.filtrarRequerimiento3(catalog, id) 
             print("Se cargaron ", lt.size(listaFiltrada))
             result = controller.sortDias(listaFiltrada) 
             print(printResultsReq3(result)) 
+
         else:
             print('La categoría ingresada no existe.')
     
+
     else:
         sys.exit(0)
 sys.exit(0)
