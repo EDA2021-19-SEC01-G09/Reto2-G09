@@ -87,6 +87,9 @@ def loadCategorias(catalog):
        
 def filtrarRequerimiento1(catalog, categoria, country):
     return model.filtrarRequerimiento1(catalog, categoria, country)
+ 
+def filtrarRequerimiento2(catalog, country):
+    return model.filtrarRequerimiento2(catalog, country)
 
 def filtrarRequerimiento3(catalog, categoria):
     return model.filtrarRequerimiento3(catalog, categoria)
@@ -104,6 +107,9 @@ def sortDias(catalog):
 def buscarCategoria(catalog, categoria):
     cat = model.buscarCategoria(catalog, categoria)
     return cat
+  
+def buscarPais(catalog, pais):
+    return model.buscarPais(catalog, pais)
 
 
 # ======================================
