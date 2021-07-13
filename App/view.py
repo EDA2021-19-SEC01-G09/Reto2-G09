@@ -75,6 +75,11 @@ def printResultsReq1(ord_videos, n_videos):
             video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Fecha publicación: ' + video['publish_time'] + ' Vistas: ' + video['views'] + ' Likes: ' + video['likes'] + ' Dislikes: ' + video['dislikes'])
             i += 1
     return ""
+   
+def printResultsReq2(ord_videos):
+    video = lt.getElement(ord_videos, 1)
+    print('País: ' + video['country'] + ' Título: ' + video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Relación likes/dislikes: ' + str(video['ratio_likes_dislikes']) + ' Días: ' + str(video['dias']))      
+    return ""
 
 def printResultsReq3(ord_videos):
     video = lt.getElement(ord_videos, 1)
@@ -114,7 +119,16 @@ while True:
                 result = controller.sortLikes(listaFiltrada, n_videos)
                 print('Cargando información de videos con más likes...')
                 print(printResultsReq1(result, n_videos))
-
+                
+    elif int(inputs[0]) == 3:
+        country = input('Ingrese el pais deseado: ')
+        if controller.buscarPais(catalog['paises'], country) == True: 
+            listaFiltrada = controller.filtrarRequerimiento2(catalog, country)
+            print("Se cargaron ", lt.size(listaFiltrada))
+            result = controller.sortDias(listaFiltrada)
+            print(printResultsReq2(result)) 
+        else:
+            print('El país ingresado no existe.')
 
     elif int(inputs[0]) == 4:
         category_name = input('Ingrese la categoría deseada: ')
