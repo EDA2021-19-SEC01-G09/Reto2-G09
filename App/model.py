@@ -126,11 +126,10 @@ def addPais(catalog, paisName, video):
     
 # Funciones de consulta
 
-def getVideosByCat(catalog, categoria, country):
+def filtrarRequerimiento1(catalog, categoria, country):
     cat = mp.get(catalog['categoriasId'], categoria)
     if cat:
         det = me.getValue(cat)['paises']
-        print(mp.keySet(det))
         pais = mp.get(det, country)
         if pais:    
             return me.getValue(pais)
@@ -142,11 +141,11 @@ def filtrarRequerimiento3(catalog, categoria):
     cat = mp.get(catalog['categoriasId'], categoria)
     paises = me.getValue(cat)['paises']
     nombres = mp.keySet(paises)
-    for nombre in range(0, lt.size(nombres)):
+    for nombre in range(1, lt.size(nombres) + 1):
         nombrePais = lt.getElement(nombres, nombre)
         pais = mp.get(paises, nombrePais)
         vids = me.getValue(pais)['videos']
-        for i in range(0, lt.size(vids)):
+        for i in range(1, lt.size(vids) + 1):
             elementos = lt.getElement(vids, i)
             dislikes = int(elementos['dislikes'])
             if dislikes == 0:
@@ -162,10 +161,9 @@ def filtrarRequerimiento3(catalog, categoria):
                     vidRatio = mp.get(revisar, elementos['video_id'])
                     prevRatio = me.getValue(vidRatio)
                     me.setValue(vidRatio, prevRatio + 1)
-                    newVidRatio = mp.get(revisar, elementos['video_id'])
-                    elementos['dias'] = me.getValue(newVidRatio)
+                    elementos['dias'] = prevRatio + 1
                     lt.addLast(listaFiltrada, elementos)
-    #print(revisar)
+
     return listaFiltrada
    
 def buscarCategoria(catalog, categoria):

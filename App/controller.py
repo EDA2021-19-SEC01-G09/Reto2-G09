@@ -86,7 +86,7 @@ def loadCategorias(catalog):
         model.addCategoria(catalog, c_categoria)
        
 def filtrarRequerimiento1(catalog, categoria, country):
-    return model.getVideosByCat(catalog, categoria, country)
+    return model.filtrarRequerimiento1(catalog, categoria, country)
 
 def filtrarRequerimiento3(catalog, categoria):
     return model.filtrarRequerimiento3(catalog, categoria)
