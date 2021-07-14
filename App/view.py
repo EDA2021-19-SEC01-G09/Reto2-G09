@@ -124,7 +124,8 @@ while True:
             country = input('Ingrese el país que desea consultar: ')
 
             if controller.buscarPais(catalog['paises'], country) == True: 
-                listaFiltrada = controller.filtrarRequerimiento1(catalog, id, country)['videos']
+                tupla = controller.filtrarRequerimiento1(catalog, id, country)['videos']
+                listaFiltrada = tupla[0]
                 print("Se cargaron ", lt.size(listaFiltrada))
                 n_videos = int(input('Ingrese el número de videos que quiere listar: '))
 
@@ -135,6 +136,8 @@ while True:
                     result = controller.sortLikes(listaFiltrada, n_videos)
                     print('Cargando información de videos con más likes...')
                     print(printResultsReq1(result, n_videos))
+                    print("Tiempo [ms]: ", f"{tupla[1]:.3f}", "  ||  ",
+                            "Memoria [kB]: ", f"{tupla[2]:.3f}")
 
             else:
                 print('El país ingresado no existe.')
@@ -144,10 +147,13 @@ while True:
         country = input('Ingrese el pais deseado: ')
 
         if controller.buscarPais(catalog['paises'], country) == True: 
-            listaFiltrada = controller.filtrarRequerimiento2(catalog, country)
+            tupla = controller.filtrarRequerimiento2(catalog, country)
+            listaFiltrada = tupla[0]
             print("Se cargaron ", lt.size(listaFiltrada))
             result = controller.sortDias(listaFiltrada)
             print(printResultsReq2(result)) 
+            print("Tiempo [ms]: ", f"{tupla[1]:.3f}", "  ||  ",
+                            "Memoria [kB]: ", f"{tupla[2]:.3f}")
 
         else:
             print('El país ingresado no existe.')
@@ -158,10 +164,13 @@ while True:
 
         if controller.buscarCategoria(catalog, category_name) == True:
             id = obtenerIdCategoria(catalog, category_name) 
-            listaFiltrada = controller.filtrarRequerimiento3(catalog, id) 
+            tupla = controller.filtrarRequerimiento3(catalog, id) 
+            listaFiltrada = [0]
             print("Se cargaron ", lt.size(listaFiltrada))
             result = controller.sortDias(listaFiltrada) 
             print(printResultsReq3(result)) 
+            print("Tiempo [ms]: ", f"{tupla[1]:.3f}", "  ||  ",
+                            "Memoria [kB]: ", f"{tupla[2]:.3f}")
 
         else:
             print('La categoría ingresada no existe.')

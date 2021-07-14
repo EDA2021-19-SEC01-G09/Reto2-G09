@@ -87,16 +87,80 @@ def loadCategorias(catalog):
         model.addCategoria(catalog, c_categoria)
        
 def filtrarRequerimiento1(catalog, categoria, country):
-    return model.filtrarRequerimiento1(catalog, categoria, country)
- 
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    answer = model.filtrarRequerimiento1(catalog, categoria, country)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return answer, delta_time, delta_memory
+
 def filtrarRequerimiento2(catalog, country):
-    return model.filtrarRequerimiento2(catalog, country)
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    answer = model.filtrarRequerimiento2(catalog, country)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return answer, delta_time, delta_memory
 
 def filtrarRequerimiento3(catalog, categoria):
-    return model.filtrarRequerimiento3(catalog, categoria)
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    answer =  model.filtrarRequerimiento3(catalog, categoria)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return answer, delta_time, delta_memory
 
 def filtrarRequerimiento4(catalog, country, tag):
-    return model.filtrarRequerimiento4(catalog, country, tag)
+    delta_time = -1.0
+    delta_memory = -1.0
+
+    tracemalloc.start()
+    start_time = getTime()
+    start_memory = getMemory()
+
+    answer =  model.filtrarRequerimiento4(catalog, country, tag)
+
+    stop_memory = getMemory()
+    stop_time = getTime()
+    tracemalloc.stop()
+
+    delta_time = stop_time - start_time
+    delta_memory = deltaMemory(start_memory, stop_memory)
+
+    return answer, delta_time, delta_memory
 
 # Funciones de ordenamiento
 
