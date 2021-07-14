@@ -191,7 +191,23 @@ def filtrarRequerimiento3(catalog, categoria):
                     lt.addLast(listaFiltrada, elementos)
 
     return listaFiltrada
-   
+
+def filtrarRequerimiento4(catalog, pais, tag):
+    listaFiltrada = lt.newList()
+    lista = mp.get(catalog['paises'], pais)
+    paisVideos = me.getValue(lista)['videos']
+    for i in range(0, lt.size(paisVideos)):
+        listaTags = lt.newList()
+        elementos = lt.getElement(paisVideos, i)
+        if tag in elementos['tags']:
+            tagsVid = elementos['tags'].split("|")
+            for j in range(0, len(tagsVid)):
+                tagsVid[j] = tagsVid[j].lower().strip("\"")
+                lt.addLast(listaTags, tagsVid[j])
+            if lt.isPresent(listaTags, tag) != 0:
+                lt.addLast(listaFiltrada, elementos)
+    return listaFiltrada
+
 def buscarCategoria(catalog, categoria):
     """
     Retorna un autor con sus libros a partir del nombre del autor

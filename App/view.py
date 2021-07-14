@@ -166,6 +166,12 @@ while True:
         else:
             print('La categoría ingresada no existe.')
     
+    elif int(inputs[0]) == 5:
+        country = input('Ingrese el pais: ')
+        if controller.buscarPais(catalog['paises'], country) == True:
+            tag = str(input('Ingrese el tag: '))
+            listaFiltrada = controller.filtrarRequerimiento4(catalog, country, tag)
+            print(listaFiltrada)
 
     else:
         sys.exit(0)

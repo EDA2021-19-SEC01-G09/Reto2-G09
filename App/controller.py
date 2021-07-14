@@ -95,6 +95,9 @@ def filtrarRequerimiento2(catalog, country):
 def filtrarRequerimiento3(catalog, categoria):
     return model.filtrarRequerimiento3(catalog, categoria)
 
+def filtrarRequerimiento4(catalog, country, tag):
+    return model.filtrarRequerimiento4(catalog, country, tag)
+
 # Funciones de ordenamiento
 
 def sortLikes(catalog, n_videos):
