@@ -124,8 +124,8 @@ while True:
             country = input('Ingrese el país que desea consultar: ')
 
             if controller.buscarPais(catalog['paises'], country) == True: 
-                tupla = controller.filtrarRequerimiento1(catalog, id, country)['videos']
-                listaFiltrada = tupla[0]
+                tupla = controller.filtrarRequerimiento1(catalog, id, country)
+                listaFiltrada = tupla[0]['videos']
                 print("Se cargaron ", lt.size(listaFiltrada))
                 n_videos = int(input('Ingrese el número de videos que quiere listar: '))
 
@@ -165,7 +165,7 @@ while True:
         if controller.buscarCategoria(catalog, category_name) == True:
             id = obtenerIdCategoria(catalog, category_name) 
             tupla = controller.filtrarRequerimiento3(catalog, id) 
-            listaFiltrada = [0]
+            listaFiltrada = tupla[0]
             print("Se cargaron ", lt.size(listaFiltrada))
             result = controller.sortDias(listaFiltrada) 
             print(printResultsReq3(result)) 
