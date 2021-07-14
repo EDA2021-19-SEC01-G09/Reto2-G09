@@ -40,6 +40,7 @@ los mismos.
 
 # Construccion de modelos
 
+
 def newCatalog():
     """
     Inicializa el catálogo de videos. Crea una lista vacia para guardar
@@ -52,12 +53,14 @@ def newCatalog():
 
     catalog['videos'] = lt.newList("ARRAY_LIST")
     catalog['categorias'] = lt.newList("ARRAY_LIST", cmpfunction = compararCategorias)
-    catalog['categoriasId'] = mp.newMap(32, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
-    catalog['paises'] = mp.newMap(10, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpPaises)
+    catalog['categoriasId'] = mp.newMap(67, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
+    catalog['paises'] = mp.newMap(23, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpPaises)
     
     return catalog
 
+
 # Funciones para creacion de datos
+
 
 def newCategoria(id):
     """
@@ -68,8 +71,9 @@ def newCategoria(id):
     cat = {'id' : "",
               "paises" : None}
     cat['id']= id
-    cat['paises'] = mp.newMap(2, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
+    cat['paises'] = mp.newMap(23, maptype = 'PROBING', loadfactor = 0.5, comparefunction = cmpCategorias)
     return cat
+
 
 def newPais(nombre):
     pais = {'pais' : "",
@@ -81,17 +85,20 @@ def newPais(nombre):
 
 # Funciones para agregar informacion al catalogo
 
+
 def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
     lt.addLast(catalog['videos'], video)
     addCategoriaId(catalog, video['category_id'], video['country'], video)
     addPais(catalog, video['country'], video)
     
+
 def addCategoria(catalog, categoria):
     """
     Adiciona una categoría a la lista de categorías
     """
     lt.addLast(catalog['categorias'], categoria)
+
 
 def addCategoriaId(catalog, idCategoria, country, video):
     categorias =  catalog['categoriasId']
@@ -112,6 +119,7 @@ def addCategoriaId(catalog, idCategoria, country, video):
         mp.put(paises, country, pais)
     lt.addLast(pais['videos'], video)
     
+
 def addPais(catalog, paisName, video):
     paises =  catalog['paises']
     existpais = mp.contains(paises, paisName)
@@ -122,8 +130,10 @@ def addPais(catalog, paisName, video):
         pais = newPais(paisName)
         mp.put(paises, paisName, pais)
     lt.addLast(pais['videos'], video)
-    
+
+
 # Funciones de consulta
+
 
 def filtrarRequerimiento1(catalog, categoria, country):
     cat = mp.get(catalog['categoriasId'], categoria)
@@ -134,6 +144,7 @@ def filtrarRequerimiento1(catalog, categoria, country):
             return me.getValue(pais)
     return None
    
+
 def filtrarRequerimiento2(catalog, pais):
     listaFiltrada = lt.newList('ARRAY_LIST')
     revisar = mp.newMap(2, maptype = 'PROBING', loadfactor = 0.5)
@@ -160,6 +171,7 @@ def filtrarRequerimiento2(catalog, pais):
                 lt.addLast(listaFiltrada, elementos)
 
     return listaFiltrada
+
 
 def filtrarRequerimiento3(catalog, categoria):
     listaFiltrada = lt.newList('ARRAY_LIST')
@@ -192,6 +204,7 @@ def filtrarRequerimiento3(catalog, categoria):
 
     return listaFiltrada
 
+
 def filtrarRequerimiento4(catalog, pais, tag):
     listaFiltrada = lt.newList()
     lista = mp.get(catalog['paises'], pais)
@@ -199,7 +212,7 @@ def filtrarRequerimiento4(catalog, pais, tag):
     for i in range(0, lt.size(paisVideos)):
         listaTags = lt.newList()
         elementos = lt.getElement(paisVideos, i)
-        if tag in elementos['tags']:
+        if tag in elementos['tags'].lower():
             tagsVid = elementos['tags'].split("|")
             for j in range(0, len(tagsVid)):
                 tagsVid[j] = tagsVid[j].lower().strip("\"")
@@ -207,6 +220,7 @@ def filtrarRequerimiento4(catalog, pais, tag):
             if lt.isPresent(listaTags, tag) != 0:
                 lt.addLast(listaFiltrada, elementos)
     return listaFiltrada
+
 
 def buscarCategoria(catalog, categoria):
     """
@@ -217,6 +231,7 @@ def buscarCategoria(catalog, categoria):
     else:
         return False
      
+
 def buscarPais(catalog, pais):
     if mp.contains(catalog, pais) == True:
         return True
@@ -224,7 +239,20 @@ def buscarPais(catalog, pais):
         return False
 
 
+def buscarTag(catalog, tag): 
+    falso = False
+    for i in range(0, lt.size(catalog['videos'])):
+        elemento = lt.getElement(catalog['videos'],i)
+        if tag.lower() in elemento['tags'].lower():
+            verificar = True
+            if verificar == True:
+                falso = True
+                break
+    return falso
+
+
 # Funciones utilizadas para comparar elementos
+
 
 def cmpPaises(keyname, pais):
     """
@@ -271,6 +299,16 @@ def cmpVideosByDias(video1, video2):
     if (int(video1['dias']) > int(video2['dias'])):
         return True
 
+def cmpVideosByComments(video1, video2):
+    """
+    Devuelve verdadero (True) si los likes de video1 son menores que los del video2
+    Args:
+        video1: informacion del primer video que incluye su valor 'comments'
+        video2: informacion del segundo video que incluye su valor 'comments'
+    """
+    if (int(video1['comment_count']) > int(video2['comment_count'])):
+        return True
+
 # Funciones de ordenamiento
 
 def sortLikes(catalog, size):
@@ -286,4 +324,11 @@ def sortDias(catalog):
     sorted_list = ms.sort(sub_list, cmpVideosByDias)    
     sub_list2 = lt.subList(sorted_list, 1, 1)
     return sub_list2
-#
+
+def sortComentarios(catalog, size):
+    sub_list = lt.subList(catalog, 1, lt.size(catalog))
+    sub_list = sub_list.copy()
+    sorted_list = ms.sort(sub_list, cmpVideosByComments)    
+    sub_list2 = lt.subList(sorted_list, 1, size)
+    return sub_list2
+

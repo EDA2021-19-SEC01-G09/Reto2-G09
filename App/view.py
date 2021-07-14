@@ -46,6 +46,7 @@ def printMenu():
     print("3- Cargar video con percepción altamente positiva que más días ha sido trend por país")
     print("4- Cargar video con percepción altamente positiva que más días ha sido trend por categoría")
     print("5- Cargar videos con más comentarios en función del país y un tag")
+    print("6- Salir")
 
 
 def initCatalog():
@@ -91,6 +92,19 @@ def printResultsReq2(ord_videos):
 def printResultsReq3(ord_videos):
     video = lt.getElement(ord_videos, 1)
     print('Categoría: ' + video['category_id'] + ' Título: ' + video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Relación likes/dislikes: ' + str(video['ratio_likes_dislikes']) + ' Días: ' + str(video['dias']))      
+    return ""
+
+
+def printResultsReq4(ord_videos, n_videos):
+    size = lt.size(ord_videos)
+    if size >= n_videos:
+        print("Los ", n_videos, " videos con más comentarios son: ")
+        i = 1
+        while i <= (n_videos):
+            video = lt.getElement(ord_videos, i)
+            print('Comentarios: ' + video['comment_count'] + ' Título: ' +
+            video['title'] + ' Nombre del canal: ' + video['channel_title'] + ' Fecha publicación: ' + video['publish_time'] + ' Vistas: ' + video['views'] + ' Likes: ' + video['likes'] + ' Dislikes: ' + video['dislikes'] + ' Tags: ' + video['tags'])
+            i += 1
     return ""
 
 
@@ -174,13 +188,33 @@ while True:
 
         else:
             print('La categoría ingresada no existe.')
-    
+
     elif int(inputs[0]) == 5:
         country = input('Ingrese el pais: ')
+
         if controller.buscarPais(catalog['paises'], country) == True:
-            tag = str(input('Ingrese el tag: '))
-            listaFiltrada = controller.filtrarRequerimiento4(catalog, country, tag)
-            print(listaFiltrada)
+            tag = str(input('Ingrese el tag: ')).lower()
+
+            if controller.buscarTag(catalog, tag) == True:
+                tupla = controller.filtrarRequerimiento4(catalog, country, tag)
+                listaFiltrada = tupla[0]
+                print("Se cargaron ", lt.size(listaFiltrada))
+                n_videos = int(input('Ingrese el número de videos que quiere listar: '))
+
+                if n_videos > lt.size(listaFiltrada):
+                    print('La sublista deseada excede el número de elementos cargados. Por favor ingresar otro valor.')
+
+                else:
+                    result = controller.sortComentarios(listaFiltrada, n_videos)
+                    print('Cargando información de videos con más likes...')
+                    print(printResultsReq4(result, n_videos))
+                    print("Tiempo [ms]: ", f"{tupla[1]:.3f}", "  ||  ",
+                            "Memoria [kB]: ", f"{tupla[2]:.3f}")
+            else:
+                print('El tag no existe')
+
+        else:
+            print('El país no existe.')
 
     else:
         sys.exit(0)

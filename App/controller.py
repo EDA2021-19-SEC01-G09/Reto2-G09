@@ -170,6 +170,9 @@ def sortLikes(catalog, n_videos):
 def sortDias(catalog):
     return model.sortDias(catalog)
 
+def sortComentarios(catalog, n_videos):
+    return model.sortComentarios(catalog, n_videos)
+
 # Funciones de consulta sobre el catálogo
  
 def buscarCategoria(catalog, categoria):
@@ -178,6 +181,9 @@ def buscarCategoria(catalog, categoria):
   
 def buscarPais(catalog, pais):
     return model.buscarPais(catalog, pais)
+
+def buscarTag(catalog, tag):
+    return model.buscarTag(catalog, tag)
 
 
 # ======================================
